@@ -27,7 +27,7 @@ Outputs:
 Resources:
   HelloWorldFunction:
     Properties:
-      CodeUri: s3://stockdog-portfolio-collector-lambda/bf13d97d3503fddabc2a3dccee9b020d
+      CodeUri: s3://stockdog-portfolio-collector-lambda/0f4c363912c89464189537b05817c999
       Events:
         HelloWorld:
           Properties:

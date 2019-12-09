@@ -28,14 +28,17 @@ def collectIEXTickersPrice(mysql_secret, iextoken):
 	return ""
 
 def getTickersCount(cursor):
-	cursor.execute("SELECT count(*) from Ticker order by symbol asc")
+	cursor.execute("SELECT count(ticker) from PortfolioItem pi left join Portfolio p on p.id=pi.portfolioId left join League l on l.id=p.leagueId where DATEDIFF(l.end,  curdate()) >=0 ")
 	tickerCount = cursor.fetchone();
 	return next(iter(tickerCount.values()))
 
 def getTickerSymbols(offset,size,cursor):
 	ignoreSymbols = ["BLIN","EVGBC","IVENC","ZTEST","EVLMC","IVFGC","EVSTC","IVFVC",]
 	tickerArray = []
-	cursor.execute("SELECT symbol from Ticker order by symbol asc limit "+str(offset)+","+str(size))
+	#most portfolios are already done so we dont have to collect.
+    #cursor.execute("SELECT symbol from Ticker order by symbol asc limit "+str(offset)+","+str(size))
+    cursor.execute("SELECT ticker from PortfolioItem pi left join Portfolio p on p.id=pi.portfolioId left join League l on l.id=p.leagueId where AND DATEDIFF(l.end,  curdate()) >=0 ")
+
 	tickers = cursor.fetchall()
 	for ticker in tickers:
 		if ticker["symbol"].strip() not in ignoreSymbols:
