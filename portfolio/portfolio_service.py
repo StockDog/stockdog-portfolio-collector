@@ -37,13 +37,13 @@ def calculatePortfolioHistory(cursor,portfolioWithItems,mysql_secret,iextoken):
 
 
 def getPortfolioCount(cursor):
-	cursor.execute("SELECT count(*) from Portfolio p left join League l on l.id=p.leagueId where  DATEDIFF(l.end,  curdate()) >=0 ")
+	cursor.execute("SELECT count(*) from Portfolio p left join League l on l.id=p.leagueId where DATEDIFF(l.start, curdate())<0 and DATEDIFF(l.end,  curdate()) >=0 ")
 	portfolioCount = cursor.fetchone();
 	return next(iter(portfolioCount.values()))
 
 def getPortfolioWithItems(cursor,offset,size):
 	portfolioWithItems = {};
-	cursor.execute("SELECT * from Portfolio p left join League l on l.id=p.leagueId where DATEDIFF(l.end,  curdate()) >=0 order by id limit "+str(offset)+","+str(size))
+	cursor.execute("SELECT * from Portfolio p left join League l on l.id=p.leagueId where DATEDIFF(l.start, curdate())<0 and DATEDIFF(l.end,  curdate()) >=0 order by id limit "+str(offset)+","+str(size))
 	portfolio = cursor.fetchone()
 	cursor.execute("SELECT * from PortfolioItem where portfolioId=%s",(portfolio["id"]))
 	portfolioItems = cursor.fetchall()
