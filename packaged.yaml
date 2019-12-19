@@ -1,4 +1,5 @@
 AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
 Description: 'sam-app
 
   Sample SAM Template for sam-app
@@ -7,6 +8,19 @@ Description: 'sam-app
 Globals:
   Function:
     Timeout: 3
+Resources:
+  HelloWorldFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: s3://stockdog-portfolio-collector-lambda/ce765b908279dd6d6e796147bff905b3
+      Handler: app.lambda_handler
+      Runtime: python3.7
+      Events:
+        HelloWorld:
+          Type: Api
+          Properties:
+            Path: /hello
+            Method: get
 Outputs:
   HelloWorldApi:
     Description: API Gateway endpoint URL for Prod stage for Hello World function
@@ -24,17 +38,3 @@ Outputs:
       Fn::GetAtt:
       - HelloWorldFunctionRole
       - Arn
-Resources:
-  HelloWorldFunction:
-    Properties:
-      CodeUri: s3://stockdog-portfolio-collector-lambda/a3181f50bfd6904b60e8f612e45c0109
-      Events:
-        HelloWorld:
-          Properties:
-            Method: get
-            Path: /hello
-          Type: Api
-      Handler: app.lambda_handler
-      Runtime: python3.7
-    Type: AWS::Serverless::Function
-Transform: AWS::Serverless-2016-10-31

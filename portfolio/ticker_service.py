@@ -29,7 +29,7 @@ def collectIEXTickersPrice(mysql_secret, iextoken):
 
 def getTickersCount(cursor):
 	cursor.execute("SELECT count(ticker) from PortfolioItem pi left join Portfolio p on p.id=pi.portfolioId left join League l on l.id=p.leagueId where DATEDIFF(l.start, curdate())<0 and DATEDIFF(l.end,  curdate()) >=0")
-	tickerCount = cursor.fetchone();
+	tickerCount = cursor.fetchone()
 	return next(iter(tickerCount.values()))
 
 def getTickerSymbols(offset,size,cursor):
@@ -37,23 +37,23 @@ def getTickerSymbols(offset,size,cursor):
 	tickerArray = []
 	#most portfolios are already done so we dont have to collect.
     #cursor.execute("SELECT symbol from Ticker order by symbol asc limit "+str(offset)+","+str(size))
-    cursor.execute("SELECT ticker from PortfolioItem pi left join Portfolio p on p.id=pi.portfolioId left join League l on l.id=p.leagueId where DATEDIFF(l.start, curdate())<0 and DATEDIFF(l.end,  curdate()) >=0")
+	cursor.execute("SELECT ticker from PortfolioItem pi left join Portfolio p on p.id=pi.portfolioId left join League l on l.id=p.leagueId where DATEDIFF(l.start, curdate())<0 and DATEDIFF(l.end,  curdate()) >=0")
 
 	tickers = cursor.fetchall()
 	for ticker in tickers:
 		if ticker["symbol"].strip() not in ignoreSymbols:
 			tickerArray.append(ticker["symbol"])
-	return tickerArray;
+	return tickerArray
 
 # Past date data collection needs more work here
 def collectIEXTickerPrice(ticker,cursor,iextoken):
-	print("Collecting the ticker price from IEX : ",ticker);
+	print("Collecting the ticker price from IEX : ",ticker)
 	currentPrice = {}
 	tickerPrice = Stock(ticker, output_format='pandas',token=iextoken)
-	price = tickerPrice.get_quote()[ticker]["latestPrice"];
+	price = tickerPrice.get_quote()[ticker]["latestPrice"]
 	cursor.execute('''INSERT INTO TickerHistory(ticker,sharePrice) VALUES(%s,%s)''',(ticker,price))
-	currentPrice[ticker]=price;
-	return currentPrice[ticker];
+	currentPrice[ticker]=price
+	return currentPrice[ticker]
 
 #For now we are only doing for the given day after close
 def getTickerPrice(ticker,mysql_secret,iextoken):
@@ -61,14 +61,14 @@ def getTickerPrice(ticker,mysql_secret,iextoken):
 	try:
 		with connection.cursor() as cursor:
 			cursor.execute("SELECT sharePrice from TickerHistory where ticker=%s order by dateCreated desc limit 1",(ticker))
-			tickerPrice = cursor.fetchone();
-			price = 0.0;
+			tickerPrice = cursor.fetchone()
+			price = 0.0
 			if tickerPrice != None:
 				price = next(iter(tickerPrice.values()))
 			else:
-				price = collectIEXTickerPrice(ticker,cursor,iextoken);
+				price = collectIEXTickerPrice(ticker,cursor,iextoken)
 			connection.commit()
-			return price;
+			return price
 	finally:
 		connection.close()
 	return ""

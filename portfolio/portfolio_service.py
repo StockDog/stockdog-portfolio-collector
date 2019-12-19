@@ -43,7 +43,7 @@ def getPortfolioCount(cursor):
 
 def getPortfolioWithItems(cursor,offset,size):
 	portfolioWithItems = {};
-	cursor.execute("SELECT * from Portfolio p left join League l on l.id=p.leagueId where DATEDIFF(l.start, curdate())<0 and DATEDIFF(l.end,  curdate()) >=0 order by id limit "+str(offset)+","+str(size))
+	cursor.execute("SELECT * from Portfolio p left join League l on l.id=p.leagueId where DATEDIFF(l.start, curdate())<0 and DATEDIFF(l.end,  curdate()) >=0 order by p.id limit "+str(offset)+","+str(size))
 	portfolio = cursor.fetchone()
 	cursor.execute("SELECT * from PortfolioItem where portfolioId=%s",(portfolio["id"]))
 	portfolioItems = cursor.fetchall()
