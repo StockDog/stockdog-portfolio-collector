@@ -5,7 +5,6 @@ sam build
 sam package --output-template-file packaged.yaml --s3-bucket stockdog-portfolio-collector-lambda
 sam deploy --template-file <path to packaged.yaml> --stack-name stockdog-portfolio-collector --capabilities CAPABILITY_IAM
 ```
-Make sure to update the CloudWatch rule to the new lambda.
 # sam-app
 
 This is a sample template for sam-app - Below is a brief explanation of what we have generated for you:
