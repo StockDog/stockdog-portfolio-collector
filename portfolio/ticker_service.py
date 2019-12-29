@@ -41,8 +41,8 @@ def getTickerSymbols(offset,size,cursor):
 
 	tickers = cursor.fetchall()
 	for ticker in tickers:
-		if ticker["symbol"].strip() not in ignoreSymbols:
-			tickerArray.append(ticker["symbol"])
+		if ticker["ticker"].strip() not in ignoreSymbols:
+			tickerArray.append(ticker["ticker"])
 	return tickerArray
 
 # Past date data collection needs more work here

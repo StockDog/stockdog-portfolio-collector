@@ -12,7 +12,7 @@ Resources:
   HelloWorldFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: s3://stockdog-portfolio-collector-lambda/ce765b908279dd6d6e796147bff905b3
+      CodeUri: s3://stockdog-portfolio-collector-lambda/9e23b1e36d72242297636157d9bf0899
       Handler: app.lambda_handler
       Runtime: python3.7
       Events:
